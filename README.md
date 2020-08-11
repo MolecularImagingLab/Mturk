@@ -1,4 +1,4 @@
-# Functions for MTurk trauma, cannabis & negative symptoms survey
+# MTurk trauma, cannabis & negative symptoms survey
 
 Surveys created with jspsych https://www.jspsych.org/
 
