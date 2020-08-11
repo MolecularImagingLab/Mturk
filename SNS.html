@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="jspsych-6.1.0/jspsych.js"></script>
+<script src="jspsych-6.1.0/plugins/jspsych-survey-template.js"></script>
+  <link rel="stylesheet" href="jspsych-6.1.0/css/jspsych.css"></link>
+  <meta charset="utf-8"/>
+  <!-- loading items & choises -->
+  <script src="SNS.js"></script>
+</head>
+
+<body></body>
+
+<script>
+
+
+
+var SNS = {
+    type: 'survey-template',
+    items: SNSitems,
+    scale: SNSoptions,
+    randomize_question_order: false,
+    reverse: SNSReverse,
+    instructions: SNSinstruction,
+    scale_repeat: 5
+  };
+
+// load in items and choices
+
+
+jsPsych.init({
+  timeline: [SNS],
+  on_finish: function() {
+    jsPsych.data.displayData();
+  }
+});
+
+</script>
+
+</html>

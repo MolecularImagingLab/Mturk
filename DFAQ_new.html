@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+
+<html>
+
+<head>
+  <script src="jspsych-6.1.0/jspsych.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-template.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-template-obj.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-multi-choice.js"></script>
+  <link rel="stylesheet" href="jspsych-6.1.0/css/jspsych.css"></link>
+  <meta charset="utf-8"/>
+  <!-- loading items & choises -->
+  <script src="DFAQ.js"></script>
+</head>
+<body>
+
+<script>
+
+
+// Item 1
+var trial_1 = {
+    type: 'survey-template',
+    items: ['Have you ever used cannabis?'],
+    scale: ['Yes', 'No'],
+    randomize_question_order: false,
+    reverse: false,
+    instructions: ''
+  };
+
+// Trial 2
+var trial_2 = {
+type: 'survey-multi-choice',
+questions: [
+  {prompt: 'Which of the following best captures when you last used cannabis?', options: options_trial_2, required: true, horizontal: true }
+]
+}
+
+// Trial 3
+var if_trial_2B = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: 'How high are you right now?', options: options_trial_2B, required: true, horizontal: true }
+  ]
+}
+
+var if_node_2 = {
+  timeline: [if_trial_2B],
+  conditional_function: function(){
+    var data = JSON.parse(jsPsych.data.get().last(1).select('responses').values);
+    if(data[Object.keys(data)[0]] == "today" || data[Object.keys(data)[0]] == "I am currently high"){
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+var trial_34 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: 'Which of the following best captures the average frequency you currently use cannabis?', options: options_trial_3, required: true, horizontal: true },
+    {prompt: 'Which of the following best captures how long you have been using cannabis at this frequency?', options: options_trial_4, required: true, horizontal: true },
+    ]
+}
+
+var trial_56 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: 'Before the period of time you indicated above, how frequently did you use cannabis?', options: options_trial_5, required: true, horizontal: true },
+    {prompt: 'How many days of the past week did you use cannabis?', options: options_trial_6, required: true, horizontal: true }
+  ]
+}
+
+// if item 1 is true then show the rest
+var if_node_1 = {
+    timeline: [trial_2, if_node_2, trial_34, trial_56],
+    conditional_function: function(){
+      var data = jsPsych.data.get().last(1).values()[0].responses;
+      if(data.Q01 == "1"){
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+
+jsPsych.init({
+  timeline: [trial_1, if_node_1],
+  on_finish: function(){ jsPsych.data.displayData(); },
+  default_iti: 200
+});
+
+
+
+</script>
+</body>
+
+</html>

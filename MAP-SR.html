@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <script src="jspsych-6.1.0/jspsych.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-survey-template-obj.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-survey-template.js"></script>
+
+    <meta charset="utf-8"/>
+
+<!-- loading the questionnaire variables -->
+    <script src="MAP-SR.js"></script>
+    <link rel="stylesheet" href="jspsych-6.1.0/css/jspsych.css"></link>
+  </head>
+  <body></body>
+  <script>
+
+var mapMotivation = {
+    type: 'survey-template-obj',
+    items: motivationItems,
+    scale: motivationobj,
+    randomize_question_order: false,
+    reverse: motivationReverse,
+    instructions: MAPinstruction,
+    scale_repeat: 1
+  };
+
+var mapSocial = {
+    type: 'survey-template-obj',
+    items: socialItems,
+    scale: pleasureobj,
+    randomize_question_order: false,
+    reverse: pleasureReverse,
+    instructions: MAPinstruction,
+    scale_repeat: 1
+  };
+
+  var mapRecreational = {
+      type: 'survey-template-obj',
+      items: recreationalItems,
+      scale: pleasureobj,
+      randomize_question_order: false,
+      reverse: pleasureReverse,
+      instructions: MAPinstruction,
+      scale_repeat: 1
+    };
+
+var mapRelationship = {
+        type: 'survey-template',
+        items: relationshipItems,
+        randomize_question_order: false,
+        scale: relationshipScale,
+        reverse: relationshipReverse,
+        instructions: MAPinstruction,
+      };
+
+
+  jsPsych.init({
+    timeline: [ mapSocial, mapMotivation, mapRecreational, mapRelationship ],
+
+    on_finish: function() { jsPsych.data.displayData(); }
+  });
+
+    </script>
+  </html>

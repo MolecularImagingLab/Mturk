@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="jspsych-6.1.0/jspsych.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-html-form.js"></script>
+	<script src="jspsych-6.1.0/plugins/jspsych-html-slider-response.js"></script>
+
+  <link rel="stylesheet" href="jspsych-6.1.0/css/jspsych.css"></script>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+
+	var form_trial = {
+		type: 'survey-html-form',
+		preamble: '<p> How old are you <b>right now?</b> </p>',
+	html: '<p> I am <input name="first" type="number" min="18" max="100" size="10"/> years old <br> \
+	</p>'
+	}
+
+
+
+
+	jsPsych.init({
+		timeline: [form_trial],
+		on_finish: function(){ jsPsych.data.displayData(); }
+	});
+
+
+</script>
+
+</html>
