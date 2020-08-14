@@ -1,6 +1,9 @@
 # MTurk trauma, cannabis & negative symptoms survey
 
-Surveys created with jspsych https://www.jspsych.org/
+Surveys created with jspsych: https://www.jspsych.org/
+
+Using some previous work on the plugins:
+https://github.com/nivlab/nivturk-templates/tree/master/questionnaires
 
 Surveys are here:
 https://docs.google.com/document/d/1JDEXXit611wAkfK5A1_e7g5TlQWPe1_j1WjODK1x-S8/edit
