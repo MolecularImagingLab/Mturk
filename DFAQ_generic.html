@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+
+<html>
+
+<head>
+  <script src="jspsych-6.1.0/jspsych.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-template.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-template-obj.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-html-form.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-multi-choice.js"></script>
+  <link rel="stylesheet" href="jspsych-6.1.0/css/jspsych.css"></link>
+  <meta charset="utf-8"/>
+  <!-- loading items & choises -->
+  <script src="DFAQ_obj.js"></script>
+</head>
+<body>
+
+<script>
+
+
+// Item 1
+var trial_1 = {
+    type: 'survey-template',
+    items: ['Have you ever used cannabis?'],
+    scale: ['Yes', 'No'],
+    randomize_question_order: false,
+    reverse: false,
+    instructions: ''
+  };
+
+  let i = 0;
+
+  var generic_multi_choice_trial = {
+    type: 'survey-multi-choice',
+    questions: [ {prompt: '', options: ''}],
+    on_start: function(trial){
+    trial.questions = [ {prompt: Items.generic_questions[i], options: Items['generic_options_'.concat(i.toString())],
+      required: true, horizontal: false}]
+      },
+    on_finish: function(){
+      return i++
+  }
+  }
+
+var if_node_2 = {
+  timeline: [generic_multi_choice_trial],
+  conditional_function: function(){
+    var data = JSON.parse(jsPsych.data.get().last(1).select('responses').values);
+    if(data[Object.keys(data)[0]] == "today" || data[Object.keys(data)[0]] == "I am currently high"){
+      return true;
+    } else {
+      return i++;
+    }
+  },
+}
+
+// if item 1 is true then show the rest
+var if_node_1 = {
+    timeline: [generic_multi_choice_trial, if_node_2, generic_multi_choice_trial, generic_multi_choice_trial, generic_multi_choice_trial],
+    conditional_function: function(){
+      var data = jsPsych.data.get().last(1).values()[0].responses;
+      if(data.Q01 == "1"){
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+
+jsPsych.init({
+  timeline: [trial_1, if_node_1],
+  on_finish: function(){ jsPsych.data.displayData(); },
+  default_iti: 200
+});
+
+
+
+</script>
+</body>
+
+</html>

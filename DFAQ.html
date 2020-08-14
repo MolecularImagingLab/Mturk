@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+
+<html>
+
+<head>
+  <script src="jspsych-6.1.0/jspsych.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-template.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-template-obj.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-html-form.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-survey-multi-choice.js"></script>
+  <link rel="stylesheet" href="jspsych-6.1.0/css/jspsych.css"></link>
+  <meta charset="utf-8"/>
+  <!-- loading items & choises -->
+  <script src="DFAQ.js"></script>
+</head>
+<body>
+
+<script>
+
+
+// Item 1
+var trial_1 = {
+    type: 'survey-template',
+    items: ['Have you ever used cannabis?'],
+    scale: ['Yes', 'No'],
+    randomize_question_order: false,
+    reverse: false,
+    instructions: ''
+  };
+
+// Trial 2
+var trial_2 = {
+type: 'survey-multi-choice',
+questions: [
+  {prompt: 'Which of the following best captures when you last used cannabis?', options: options_trial_2, required: true, horizontal: true }
+]
+}
+
+// Trial 3
+var if_trial_2B = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: 'How high are you right now?', options: options_trial_2B, required: true, horizontal: true }
+  ]
+}
+
+var if_node_2 = {
+  timeline: [if_trial_2B],
+  conditional_function: function(){
+    var data = JSON.parse(jsPsych.data.get().last(1).select('responses').values);
+    if(data[Object.keys(data)[0]] == "today" || data[Object.keys(data)[0]] == "I am currently high"){
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+var i = 0;
+
+var generic_multi_choice_trial = {
+  type: 'survey-multi-choice',
+  questions: [
+  {prompt: Items.Q[i], options: Items.O[i], required: true, horizontal: true}
+  ]
+  on_finish: function(i){
+    return i++
+  }
+}
+
+var trial_3 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: 'Which of the following best captures the average frequency you currently use cannabis?', options: options_trial_3, required: true, horizontal: true },
+    ]
+}
+
+var trial_4 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: 'Which of the following best captures how long you have been using cannabis at this frequency?', options: options_trial_4, required: true, horizontal: true },
+    ]
+}
+
+var trial_5 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: 'Before the period of time you indicated above, how frequently did you use cannabis?', options: options_trial_5, required: true, horizontal: false },
+  ]
+}
+
+var trial_6 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: 'How many days of the past week did you use cannabis?', options: options_trial_6, required: true, horizontal: false }
+  ]
+}
+
+var trial_7 = {
+  type: 'survey-html-form',
+html: '<p> Approximately how many days of the past month did you use cannabis? <input name="first" type="number" min="0" max ="31"/></p>'
+}
+
+var trial_8 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: 'Which of the following best captures the number of times you have used cannabis in your entire life?', options: options_trial_8, required: true, horizontal: false }
+  ]
+}
+
+
+
+
+// if item 1 is true then show the rest
+var if_node_1 = {
+    timeline: [trial_2, if_node_2, trial_3, trial_4, trial_5, trial_6, trial_7],
+    conditional_function: function(){
+      var data = jsPsych.data.get().last(1).values()[0].responses;
+      if(data.Q01 == "1"){
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+
+jsPsych.init({
+  timeline: [trial_1, if_node_1],
+  on_finish: function(){ jsPsych.data.displayData(); },
+  default_iti: 200
+});
+
+
+
+</script>
+</body>
+
+</html>
