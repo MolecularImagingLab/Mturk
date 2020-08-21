@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+  <title>testing button</title>
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="jspsych-6.1.0/css/jspsych.css"></link>
+
+  </head>
+
+
+  <body>
+
+    <div class = "jspsych-btn"> Change the nonsense text <input id="btn1" type="checkbox" onclick="runTest1()"> </div>
+
+    <div class = "jspsych-btn"> Hide the nonsense text <input id="btn2" type="checkbox" onclick="runTest2()"> </div>
+
+    <div id="text" class = "jspsych-display-element"> This is nonsense </div>
+
+  <body>
+
+
+  <script>
+
+  var runTest1 = function(){
+    if(document.getElementById("btn1").checked) {
+      document.getElementById("text").innerHTML = 'This is no longer nonsense'
+    } else {
+      document.getElementById("text").innerHTML = 'This is nonsense'
+    }
+
+  };
+
+
+  var runTest2 = function(){
+    if(document.getElementById("btn2").checked) {
+      document.getElementById("text").style.visibility = 'hidden'
+    } else {
+      document.getElementById("text").style.visibility = 'visible'
+    }
+
+  };
+
+  </script>
+
+
+</html>

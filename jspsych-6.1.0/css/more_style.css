@@ -1,0 +1,127 @@
+.survey-template-wrap {
+  height: 100vh;
+  width: 100vw;
+}
+.survey-template-instructions {
+  width: ${trial.survey_width}vw;
+  margin: auto;
+  font-size: 1.25vw;
+  line-height: 1.5em;
+}
+.survey-template-container {
+  display: grid;
+  grid-template-columns: ${x1}% repeat(${n}, ${x2}%);
+  grid-template-rows: auto;
+  width: ${trial.survey_width}vw;
+  margin: auto;
+  background-color: #F8F8F8;
+  border-radius: 8px;
+}
+.survey-template-row {
+  display: contents;
+}
+.survey-template-row:hover div {
+  background-color: #dee8eb;
+}
+.survey-template-header {
+  padding: 18px 0 0px 0;
+  text-align: center;
+  font-size: 1vw;
+  line-height: 1.15em;
+}
+.survey-template-prompt {
+  padding: 12px 0 12px 15px;
+  text-align: left;
+  font-size: 1.15vw;
+  line-height: 1.15em;
+  justify-items: center;
+}
+.survey-template-response {
+  padding: 12px 0 12px 0;
+  font-size: 1.15vw;
+  text-align: center;
+  line-height: 1.15em;
+  justify-items: center;
+}
+.survey-template-response input[type='radio'] {
+  position: relative;
+  width: 13px;
+  height: 13px;
+}
+.survey-template-response .pseudo-input {
+  position: relative;
+  height: 0px;
+  width: 0px;
+  display: inline-block;
+}
+.survey-template-response .pseudo-input:after {
+  position: absolute;
+  left: 6.5px;
+  top: -6px;
+  height: 2px;
+  width: calc(${trial.survey_width}vw * ${x2 / 100} - 100%);
+  background: #d8dcd6;
+  content: "";
+}
+.survey-template-response:last-child .pseudo-input:after {
+  display: none;
+}
+.survey-template-footer {
+  margin: auto;
+  width: ${trial.survey_width}vw;
+  padding: 0 0 0 0;
+  text-align: right;
+}
+.survey-template-footer input[type=submit] {
+  background-color: #F0F0F0;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 4px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  margin-right: 0px;
+  font-size: 1vw;
+  color: black;
+}
+@media screen and (max-width: 1200px) {
+  .survey-template-instructions {
+    width: calc(1200px * ${trial.survey_width} / 100);
+    font-size: calc(1200px * 0.0125);
+  }
+  .survey-template-container {
+    width: calc(1200px * ${trial.survey_width} / 100);
+  }
+  .survey-template-header {
+    font-size: calc(1200px * 0.0100);
+  }
+  .survey-template-prompt {
+    font-size: calc(1200px * 0.0115);
+  }
+  .survey-template-response .pseudo-input:after {
+    width: calc(1200px * ${x2 / 100} - 30px);
+  }
+  .survey-template-footer {
+    width: calc(1200px * ${trial.survey_width} / 100);
+  }
+}
+@media screen and (min-width: 1600px) {
+  .survey-template-instructions {
+    width: calc(1600px * ${trial.survey_width} / 100);
+    font-size: calc(1600px * 0.0125);
+  }
+  .survey-template-container {
+    width: calc(1600px * ${trial.survey_width} / 100);
+  }
+  .survey-template-header {
+    font-size: calc(1600px * 0.0100);
+  }
+  .survey-template-prompt {
+    font-size: calc(1600px * 0.0115);
+  }
+  .survey-template-response .pseudo-input:after {
+    width: calc(1600px * ${x2 / 100} - 40px);
+  }
+  .survey-template-footer {
+    width: calc(1600px * ${trial.survey_width} / 100);
+  }
+}

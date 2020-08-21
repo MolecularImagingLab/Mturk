@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+
+
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <script src="jspsych-6.1.0/jspsych.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-survey-html-stripped.js"></script>
+    <link rel="stylesheet" href="jspsych-6.1.0/css/jspsych.css"></link>
+  </head>
+  <body></body>
+
+    <script>
+
+
+  	var test = {
+  		type: 'survey-html-stripped',
+  	html: '<p> I am feeling bad <input id="btn1" name="first" type="radio"/></p>'
+  	}
+
+
+    jsPsych.init({
+      timeline: [ test ],
+      on_finish: function() { jsPsych.data.displayData(); }
+    });
+
+    </script>
+  </html>

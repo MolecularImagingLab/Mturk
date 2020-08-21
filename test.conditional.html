@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+
+
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <script src="jspsych-6.1.0/jspsych.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-survey-conditional.js"></script>
+    <link rel="stylesheet" href="jspsych-6.1.0/css/jspsych.css"></link>
+  </head>
+  <body></body>
+
+    <script>
+
+
+  	var test = {
+  		type: 'survey-conditional',
+  	  query: 'Are you doing ok today?',
+      scale: ['Yes', "No"],
+      conditional_query: 'Really? How good are you actually doing?',
+      conditional_scale: ['Very Good','Just Fine', 'So So', 'Terribly']
+
+  	}
+
+
+    jsPsych.init({
+      timeline: [ test ],
+      on_finish: function() { jsPsych.data.displayData(); }
+    });
+
+    </script>
+  </html>
