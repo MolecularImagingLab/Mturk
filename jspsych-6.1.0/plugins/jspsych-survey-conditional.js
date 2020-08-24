@@ -8,28 +8,28 @@ jsPsych.plugins['survey-conditional'] = (function() {
     name: 'survey-conditional',
     description: '',
     parameters: {
-      query: {
+      polar_questions: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
-        pretty_name: 'Items',
-        decription: 'The questions associated with the survey'
+        pretty_name: 'Yes-No Questions',
+        decription: 'The yes-no questions associated with the survey'
       },
-      conditional_query: {
+      conditional_questions: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
-        pretty_name: 'Conditional Items',
-        decription: 'The questions associated with the survey',
+        pretty_name: 'Conditional Questions',
+        decription: 'The questions that are conditional to the polar quesion',
         default: 'hidden'
       },
-      scale: {
+      polar_scale: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
         array: true,
         pretty_name: 'Scale',
-        decription: 'The response options associated with the survey'
+        decription: 'The response options associated with the polar questions'
       },
       conditional_scale: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
         array: true,
         pretty_name: 'Conditional Scale',
-        decription: 'The response options associated with the survey'
+        decription: 'The response options associated with the conditional questions'
       },
       button_label: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -57,7 +57,7 @@ jsPsych.plugins['survey-conditional'] = (function() {
     var html = '';
 
     // Define CSS constants
-    const n  = trial.conditional_query.length;  // Number of item responses
+    const n  = trial.conditional_scale.length;  // Number of item responses
     const x1 = trial.item_width;                // Width of item prompt (percentage)
     const x2 = (100 - trial.item_width) / n;    // Width of item response (percentage)
 
@@ -190,31 +190,55 @@ jsPsych.plugins['survey-conditional'] = (function() {
         width: calc(1600px * ${trial.survey_width} / 100);
       }
     }
-    </style>`;
 
+
+    .conditional {
+      visibility:hidden
+    }
+
+    .survey-template-conditional {
+      padding: 18px 0 0px 0;
+      text-align: center;
+      font-size: 1vw;
+      line-height: 1.15em;
+    }
+
+    </style>`;
 
     html += '<div class="survey-template-wrap"><form id="survey-template-submit">';
 
-    var values = [];
-    for (var j = 0; j < trial.scale.length; j++){ values.push(j); }
-
-    // Add response headers (every N items).
-    html += '<div class="survey-template-header"></div>';
-    for (var j = 0; j < trial.scale.length; j++) {
-      html += `<div class="survey-template-header">${trial.scale[j]}</div>`;
+    var item_order = [];
+    for (var i=0; i < trial.polar_questions.length; i++){
+       item_order.push(i);
     }
 
-    // Add row.
-    html += '<div class="survey-template-row">';
-    html += `<div class='survey-template-prompt'>${trial.query}</div>`;
 
-    for (let v of values) {
-      html += '<div class="survey-template-response">';
-      html += '<div class="pseudo-input"></div>';
-      html += `<input type="radio" name="Query" value="${v}" required>`;
-      html += "</div>";
+    for (var i = 0; i < trial.polar_questions.length; i++) {
+
+      // Define item ID.
+      const qid = ("0" + `${item_order[i]+1}`);
+
+      var values = [];
+      for (var j = 0; j < trial.polar_scale.length; j++){ values.push(j); }
+
+      // Add response headers (every N items).
+      html += '<div class="survey-template-header"></div>';
+      for (var j = 0; j < trial.polar_scale.length; j++) {
+        html += `<div class="survey-template-header">${trial.polar_scale[j]}</div>`;
+      }
+
+      // Add row.
+      html += '<div class="survey-template-row">';
+      html += `<div class='survey-template-prompt' id="Q${qid}">${trial.polar_questions[i]}</div>`;
+
+      for (let v of values) {
+        html += '<div class="survey-template-response">';
+        html += '<div class="pseudo-input"></div>';
+        html += `<input type="radio" name="Query" name="Q${qid}" value="${v}" id="V${v}" required>`;
+        html += "</div>";
+      }
+      html += '</div>';
     }
-    html += '</div>';
 
     //
     // conditional
@@ -224,19 +248,19 @@ jsPsych.plugins['survey-conditional'] = (function() {
     for (var j = 0; j < trial.conditional_scale.length; j++){ values.push(j); }
 
     // Add response headers (every N items).
-    html += '<div class="survey-template-header" id="conditional" style="visibility:hidden" ></div>';
+    html += '<div class="survey-template-conditional"></div>';
     for (var j = 0; j < trial.conditional_scale.length; j++) {
-      html += `<div class="survey-template-header" style="visibility:visible">${trial.conditional_scale[j]}</div>`;
+      html += `<div class="survey-template-header conditional">${trial.conditional_scale[j]}</div>`;
     }
 
     // Add row.
     html += '<div class="survey-template-row">';
-    html += `<div class='survey-template-prompt' style="visibility:visible" >${trial.conditional_query}</div>`;
+    html += `<div class='survey-template-prompt conditional'>${trial.conditional_questions[i]}</div>`;
 
     for (let v of values) {
-      html += '<div class="survey-template-response">';
-      html += '<div class="pseudo-input"></div>';
-      html += `<input type="radio" name="Conditioal_query" value="${v}" style="visibility:visible" required>`;
+      html += '<div class="survey-template-response conditional">';
+      html += '<div class="pseudo-input""></div>';
+      html += `<input type="radio" class="conditional_items" id="C${v}" value="${v}" required>`;
       html += "</div>";
     }
     html += '</div>';
@@ -255,28 +279,22 @@ jsPsych.plugins['survey-conditional'] = (function() {
     // End survey.
     html += '</form></div>';
 
-  //  display_element.getElementById("condtional").style.visibility = "hidden"
-
     display_element.innerHTML = html;
 
+    document.querySelector(".survey-template-row").addEventListener('click', function(event) {
+      var targId = event.target.id;
+      var chk = event.target.checked;
+      var cond_items = document.querySelectorAll(".conditional");
+      var cond_responses = document.querySelectorAll(".conditional_items");
 
-    var listen = document.querySelector("#pseudo-input ")
-
-    const input = document.querySelector('input');
-    const log = document.getElementById('values');
-
-    input.addEventListener('input', updateValue);
-
-    function updateValue(e) {
-      log.textContent = e.target.value;
-    }
-
-    .addEventListener('input', function() {
-
-    var a=document.getElementById("conditional")
-    alert(a)
+      if (targId == "V1" && chk){
+            for(i = 0; i < cond_items.length; i++){cond_items[i].style.visibility = 'visible'}
+            for(i = 0; i < cond_responses.length; i++){cond_responses[i].required = true}
+      } else {
+        for(i = 0; i < cond_items.length; i++){cond_items[i].style.visibility = 'hidden'}
+        for(i = 0; i < cond_responses.length; i++){cond_responses[i].required = false}
+      }
     })
-
 
     display_element.querySelector('#survey-template-submit').addEventListener('submit', function(event) {
 
