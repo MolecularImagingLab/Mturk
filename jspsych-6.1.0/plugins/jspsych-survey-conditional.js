@@ -31,6 +31,17 @@ jsPsych.plugins['survey-conditional'] = (function() {
         pretty_name: 'Conditional Scale',
         decription: 'The response options associated with the conditional questions'
       },
+      scale_repeat: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Scale repeat',
+        default: 10,
+        description: 'The number of items before the scale repeats'
+      },
+      instructions: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        pretty_name: 'Instructions',
+        decription: 'The instructions associated with the survey'
+      },
       button_label: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Button label',
@@ -207,24 +218,31 @@ jsPsych.plugins['survey-conditional'] = (function() {
 
     html += '<div class="survey-template-wrap"><form id="survey-template-submit">';
 
+    // Add instructions.
+    html += '<div class="survey-template-instructions" id="instructions">';
+    html += `<p>${trial.instructions}<p>`;
+    html += '</div>';
+
     var item_order = [];
-    for (var i=0; i < trial.polar_questions.length; i++){
-       item_order.push(i);
-    }
+    for (var i=0; i < trial.polar_questions.length; i++){ item_order.push(i) }
 
-
+  html += '<div class="survey-template-container">';
+// loop over each question
     for (var i = 0; i < trial.polar_questions.length; i++) {
 
-      // Define item ID.
+      // Define question ID.
       const qid = ("0" + `${item_order[i]+1}`);
 
+      // values for answers to the polar question
       var values = [];
       for (var j = 0; j < trial.polar_scale.length; j++){ values.push(j); }
 
-      // Add response headers (every N items).
-      html += '<div class="survey-template-header"></div>';
-      for (var j = 0; j < trial.polar_scale.length; j++) {
-        html += `<div class="survey-template-header">${trial.polar_scale[j]}</div>`;
+      //
+      if (i % trial.scale_repeat == 0) {
+        html += '<div class="survey-template-header"></div>';
+        for (var j = 0; j < trial.polar_scale.length; j++) {
+          html += `<div class="survey-template-header">${trial.polar_scale[j]}</div>`;
+        }
       }
 
       // Add row.
@@ -238,7 +256,7 @@ jsPsych.plugins['survey-conditional'] = (function() {
         html += "</div>";
       }
       html += '</div>';
-    }
+
 
     //
     // conditional
@@ -247,10 +265,15 @@ jsPsych.plugins['survey-conditional'] = (function() {
     var values = [];
     for (var j = 0; j < trial.conditional_scale.length; j++){ values.push(j); }
 
+    html += '<div class="survey-template-container">';
+
+
     // Add response headers (every N items).
-    html += '<div class="survey-template-conditional"></div>';
-    for (var j = 0; j < trial.conditional_scale.length; j++) {
-      html += `<div class="survey-template-header conditional">${trial.conditional_scale[j]}</div>`;
+    if (i % trial.scale_repeat == 0) {
+      html += '<div class="survey-template-header"></div>';
+      for (var j = 0; j < trial.polar_scale.length; j++) {
+        html += `<div class="survey-template-header">${trial.polar_scale[j]}</div>`;
+      }
     }
 
     // Add row.
@@ -264,6 +287,8 @@ jsPsych.plugins['survey-conditional'] = (function() {
       html += "</div>";
     }
     html += '</div>';
+  }
+  html += '</div>';
 
 ///
 ////
