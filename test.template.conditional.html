@@ -17,23 +17,13 @@
   	var test = {
   		type: 'survey-template-conditional',
   	  items: ["Swore at you, called you names, said insulting things like your 'fat', 'ugly', 'stupid', etc. more than a few times a year", "Did you have a nice meal?"],
-      scale: ['Yes', "No"],
-      conditional_items: ['Please check all ages that apply.'],
+      scale: ['Yes','No'],
+      conditional_items: ['Please check all ages that apply','Please check all ages that apply'],
       conditional_scale: [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
       instructions: "Sometimes parents, stepparents or other adults living in the house do hurtful things. \
       If this happened during your childhood (first 18 years of your life) please provide your best estimate of your age at the time(s) of occurrence."
 
   	}
-    // var test = {
-    //   type: 'survey-template-conditional',
-    //   items: ['Are you doing ok today?'],
-    //   scale: ['Yes', "No"],
-    //   conditional_items: '',
-    //   conditional_scale: '',
-    //   instructions: "Answer the damn question"
-    //
-    // }
-
 
     jsPsych.init({
       timeline: [ test ],
