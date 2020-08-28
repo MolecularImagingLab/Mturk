@@ -370,8 +370,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
     const containers = display_element.querySelectorAll(".survey-template-container")
     for (let c of containers) {c.addEventListener('click',unhide)}
 
-
-
+    // make checkboxes required 
     const toggle_required = function(event){
          const hidden_checkboxes = document.getElementById(event.currentTarget.id).querySelectorAll("[type='checkbox']");
          const checked = []
@@ -405,20 +404,6 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
 
       }
     })
-
-      // for(var i=0; i<trial.questions.length; i++){
-      //   if(trial.questions[i].required){
-      //     if(display_element.querySelector('#jspsych-survey-multi-select-'+i+' input:checked') == null){
-      //       display_element.querySelector('#jspsych-survey-multi-select-'+i+' input').setCustomValidity(trial.required_message);
-      //     } else {
-      //       display_element.querySelector('#jspsych-survey-multi-select-'+i+' input').setCustomValidity('');
-      //     }
-      //   }
-      // }
-      // trial_form.reportValidity();
-
-
-
 
 
     //---------------------------------------//
