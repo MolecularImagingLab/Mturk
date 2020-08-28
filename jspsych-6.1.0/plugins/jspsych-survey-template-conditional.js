@@ -1,7 +1,7 @@
-/* jspsych-survey-template.js
- * a jspsych plugin extension for measuring items on a likert scale
+/* jspsych-survey-condtional.js
+ * a jspsych plugin extension for creating conditional questioannaires
  *
- * authors: Sam Zorowitz, Dan Bennett
+ * authors: Lauri Tuominen
  *
  */
 
@@ -28,21 +28,14 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       conditional_items: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
         array: true,
-        pretty_name: 'Items',
+        pretty_name: 'Conditional items',
         decription: 'The conditional questions associated with the survey'
       },
       conditional_scale: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
         array: true,
-        pretty_name: 'Scale',
+        pretty_name: 'Conditional scale',
         decription: 'The response options associated with the conditional questions'
-      },
-      reverse: {
-        type: jsPsych.plugins.parameterType.BOOL,
-        array: true,
-        pretty_name: 'Randomize Question Order',
-        default: [],
-        description: 'If true, the corresponding item will be reverse scored'
       },
       instructions: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
@@ -54,12 +47,6 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
         pretty_name: 'Randomize Question Order',
         default: false,
         description: 'If true, the order of the questions will be randomized'
-      },
-      scale_repeat: {
-        type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'Scale repeat',
-        default: 10,
-        description: 'The number of items before the scale repeats'
       },
       survey_width: {
         type: jsPsych.plugins.parameterType.INT,
@@ -162,21 +149,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       line-height: 1.15em;
       justify-items: center;
     }
-    .survey-template-prompt-conditional {
-      padding: 12px 0 12px 15px;
-      text-align: left;
-      font-size: 1.15vw;
-      line-height: 1.15em;
-      justify-items: center;
-    }
     .survey-template-response {
-      padding: 12px 12px 12px 0;
-      font-size: 1.15vw;
-      text-align: center;
-      line-height: 1.15em;
-      justify-items: center;
-    }
-    .survey-template-response-conditional {
       padding: 12px 12px 12px 0;
       font-size: 1.15vw;
       text-align: center;
@@ -194,12 +167,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       width: 0px;
       display: inline-block;
     }
-    .survey-template-response-conditional .pseudo-input-conditional {
-      position: relative;
-      height: 0px;
-      width: 0px;
-      display: inline-block;
-    }
+
     .survey-template-response .pseudo-input:after {
       position: absolute;
       left: 6.5px;
@@ -220,6 +188,9 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       content: "";
     }
     .survey-template-response:last-child .pseudo-input:after {
+      display: none;
+    }
+    .survey-template-response:last-child .pseudo-input-conditional:after {
       display: none;
     }
     .survey-template-footer {
@@ -323,24 +294,20 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       // Define item ID.
       const qid = ("0" + `${item_order[i]+1}`);
 
-      html += `<div class="survey-template-container" id="Container_${qid}">`;
-
       // Define response values.
-      var polar_values = [];
-      for (var j = 0; j < trial.scale.length; j++){ polar_values.push(j); }
-      if (trial.reverse[item_order[i]]) { polar_values = polar_values.reverse(); }
+      var polar_values = trial.scale;
 
       var conditional_values = [];
-      for (var j = 0; j < trial.conditional_scale.length; j++){ conditional_values.push(j); }
-      if (trial.reverse[item_order[i]]) { conditional_values = conditional_values.reverse(); }
+      for (var j = 1; j <= trial.conditional_scale.length; j++){ conditional_values.push(j); }
 
-      // Add response headers .
-        html += '<div class="survey-template-header"></div>';
-        for (var j = 0; j < trial.scale.length; j++) {
-          html += `<div class="survey-template-header">${trial.scale[j]}</div>`;
-        }
+      // Add a container and a response header for the polar question
+      html += `<div class="survey-template-container" id="Container_${qid}">`;
+      html += '<div class="survey-template-header"></div>';
+      for (var j = 0; j < trial.scale.length; j++) {
+        html += `<div class="survey-template-header">${trial.scale[j]}</div>`;
+      }
 
-      // Add row.
+      // Add row for the polar question.
       html += '<div class="survey-template-row">';
       html += `<div class='survey-template-prompt'>${trial.items[item_order[i]]}</div>`;
       for (let v of polar_values) {
@@ -350,22 +317,23 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
         html += "</div>";
       }
       html += '</div>';
+      // container end
       html += '</div>';
 
-      // create conditonal questions
+      // Add a container and response header for the conditional question
       html += `<div class="survey-template-container-conditional hidden" id="Container_${qid}_hidden">`;
       html += '<div class="survey-template-header" ></div>';
       for (var j = 0; j < trial.conditional_scale.length; j++) {
         html += `<div class="survey-template-header">${trial.conditional_scale[j]}</div>`;
       }
 
-      // Add row
+      // Add row for the conditional question
       html += '<div class="survey-template-row">';
-      html += `<div class='survey-template-prompt-conditional'>${trial.conditional_items[item_order[i]]}</div>`;
+      html += `<div class='survey-template-prompt'>${trial.conditional_items[item_order[i]]}</div>`;
       for (let v of conditional_values) {
-        html += '<div class="survey-template-response-conditional">';
+        html += '<div class="survey-template-response">';
         html += '<div class="pseudo-input-conditional" ></div>';
-        html += `<input type="checkbox" name="C${qid}.${v}" value="${v}">`;
+        html += `<input type="checkbox" name="C${qid}.Ages.${v}" value="${v}">`;
         html += "</div>";
       }
       html += '</div>';
@@ -375,7 +343,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
 
     // Add submit button.
     html += '<div class="survey-template-footer">';
-    html += `<input type="submit" value="${trial.button_label}"></input>`;
+    html += `<input type="submit" id="submit-button" value="${trial.button_label}"></input>`;
     html += '</div>';
 
     // End survey.
@@ -390,43 +358,65 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
         const val = event.target.value;
         const hidden_target = document.getElementById(targetId.concat('_hidden'))
         const hidden_checkbox = hidden_target.querySelectorAll("[type='checkbox']")
-        if (val === "0") {
+        if (val === trial.scale[0]) {
           hidden_target.style.visibility = 'visible'
           for (let h of hidden_checkbox) { h.required = true}
-        } else if (val === "1") {
+        } else if (val === trial.scale[1]) {
           hidden_target.style.visibility = 'hidden'
           for (let h of hidden_checkbox) { h.required = false}
         }
     }
-
-    const containers = document.querySelectorAll(".survey-template-container")
+    // attach function to all survey containers
+    const containers = display_element.querySelectorAll(".survey-template-container")
     for (let c of containers) {c.addEventListener('click',unhide)}
 
 
 
-    // remove required if one of the boxes is checked
     const toggle_required = function(event){
-      const hidden_checkboxes = document.getElementById(event.currentTarget.id).querySelectorAll("[type='checkbox']");
-      //const hidden_checkbox = targetId.querySelectorAll("[type='checkbox']")
-      const checked = []
-      for (h of hidden_checkboxes){ if (h.checked) checked.push(h) }
-      console.log(checked.length);
-      if (checked.length > 0) {
-        for (let h of hidden_checkboxes) {
-          h.required = false}
-      } else {
-        for (let h of hidden_checkboxes) { h.required = true}
+         const hidden_checkboxes = document.getElementById(event.currentTarget.id).querySelectorAll("[type='checkbox']");
+         const checked = []
+         for (h of hidden_checkboxes){ if (h.checked) checked.push(h) }
+         if (checked.length > 0) {
+           for (let h of hidden_checkboxes) {
+             h.required = false}
+         } else {
+           for (let h of hidden_checkboxes) { h.required = true}
+         }
+       }
+   // attach function to all conditional survey containers
+   const hidden_containers = display_element.querySelectorAll(".survey-template-container-conditional")
+   for (let h of hidden_containers) {h.addEventListener('click',toggle_required)}
+
+   // Change report message
+    display_element.querySelector('#submit-button').addEventListener('click', function(){
+      //alert('submit button pressed')
+      const all_hidden_containers = document.querySelectorAll(".survey-template-container-conditional")
+      const containers_made_visible = []
+      for (let h of all_hidden_containers){
+        if (h.style.visibility === 'visible') {containers_made_visible.push(h.id)}
       }
-    }
+      console.table(containers_made_visible)
+      for (let h of containers_made_visible) {
+        if (document.getElementById(h).querySelector('input:checked') == null) {
+          document.getElementById(h).querySelector('input').setCustomValidity('You must choose at least one response for this question');
+        } else {
+          document.getElementById(h).querySelector('input').setCustomValidity('');
+        }
 
-    // if(display_element.querySelector('#jspsych-survey-multi-select-'+i+' input:checked') == null){
-    //   display_element.querySelector('#jspsych-survey-multi-select-'+i+' input').setCustomValidity(trial.required_message);
-    // } else {
-    //   display_element.querySelector('#jspsych-survey-multi-select-'+i+' input').setCustomValidity('');
-    // }
+      }
+    })
 
-    const hidden_containers = document.querySelectorAll(".survey-template-container-conditional")
-    for (let h of hidden_containers) {h.addEventListener('click',toggle_required)}
+      // for(var i=0; i<trial.questions.length; i++){
+      //   if(trial.questions[i].required){
+      //     if(display_element.querySelector('#jspsych-survey-multi-select-'+i+' input:checked') == null){
+      //       display_element.querySelector('#jspsych-survey-multi-select-'+i+' input').setCustomValidity(trial.required_message);
+      //     } else {
+      //       display_element.querySelector('#jspsych-survey-multi-select-'+i+' input').setCustomValidity('');
+      //     }
+      //   }
+      // }
+      // trial_form.reportValidity();
+
 
 
 
