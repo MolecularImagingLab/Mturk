@@ -352,56 +352,63 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
     // Display HTML
     display_element.innerHTML = html;
 
+    function require_checkboxes(hidden_checkboxes, addvalidate){
+      const checked = []
+      for (let h of hidden_checkboxes){ if (h.checked) checked.push(h) }
+      if (checked.length > 0) {
+        for (let h of hidden_checkboxes) { h.required = false; if(addvalidate) {h.setCustomValidity('')}}
+      } else {
+        for (let h of hidden_checkboxes) { h.required = true; if (addvalidate) {h.setCustomValidity('You must choose at least one response for this question')}}
+      }
+    };
+
     // Visibility etc of the conditional items
     const unhide = function(event){
+        // If yes to polar question, unhide the hidden conditional question and vice versa
         const targetId = event.currentTarget.id;
         const val = event.target.value;
         const hidden_target = document.getElementById(targetId.concat('_hidden'))
-        const hidden_checkbox = hidden_target.querySelectorAll("[type='checkbox']")
+        const hidden_checkboxes = hidden_target.querySelectorAll("[type='checkbox']")
         if (val === trial.scale[0]) {
           hidden_target.style.visibility = 'visible'
-          for (let h of hidden_checkbox) { h.required = true}
+          require_checkboxes(hidden_checkboxes, addvalidate=false)
         } else if (val === trial.scale[1]) {
           hidden_target.style.visibility = 'hidden'
-          for (let h of hidden_checkbox) { h.required = false}
+          for (let h of hidden_checkboxes) { h.required = false; h.setCustomValidity('')}
         }
     }
-    // attach function to all survey containers
+
+    // attach unhide function to all survey containers
     const containers = display_element.querySelectorAll(".survey-template-container")
     for (let c of containers) {c.addEventListener('click',unhide)}
 
-    // make checkboxes required 
     const toggle_required = function(event){
-         const hidden_checkboxes = document.getElementById(event.currentTarget.id).querySelectorAll("[type='checkbox']");
-         const checked = []
-         for (h of hidden_checkboxes){ if (h.checked) checked.push(h) }
-         if (checked.length > 0) {
-           for (let h of hidden_checkboxes) {
-             h.required = false}
-         } else {
-           for (let h of hidden_checkboxes) { h.required = true}
-         }
-       }
-   // attach function to all conditional survey containers
+      // If hidden checkbox is clicked make all other checkboxes unrequired
+      if (event.target.type != 'checkbox') {return}
+      const hidden_checkboxes = document.getElementById(event.currentTarget.id).querySelectorAll("[type='checkbox']");
+      require_checkboxes(hidden_checkboxes, addvalidate=true)
+    }
+
+   // attach toggle_required function to all conditional survey containers
    const hidden_containers = display_element.querySelectorAll(".survey-template-container-conditional")
    for (let h of hidden_containers) {h.addEventListener('click',toggle_required)}
 
-   // Change report message
+   // If submit
     display_element.querySelector('#submit-button').addEventListener('click', function(){
-      //alert('submit button pressed')
+      // 1. Adds a listener to submit button,
+      // 2. Checks all hidden containers are made visible and
+      // 3. complaines if they don't have at least one checkbox checked
       const all_hidden_containers = document.querySelectorAll(".survey-template-container-conditional")
       const containers_made_visible = []
       for (let h of all_hidden_containers){
         if (h.style.visibility === 'visible') {containers_made_visible.push(h.id)}
       }
-      console.table(containers_made_visible)
       for (let h of containers_made_visible) {
         if (document.getElementById(h).querySelector('input:checked') == null) {
           document.getElementById(h).querySelector('input').setCustomValidity('You must choose at least one response for this question');
         } else {
           document.getElementById(h).querySelector('input').setCustomValidity('');
         }
-
       }
     })
 
