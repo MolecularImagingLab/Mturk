@@ -269,6 +269,10 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       visibility:hidden
     }
 
+    input[type=checkbox] {
+    transform: scale(1.5);
+    }
+
     </style>`;
 
     // Initialize survey.
@@ -280,7 +284,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
     html += '</div>';
 
     // Randomize question order.
-    var item_order = [];
+    const item_order = [];
     for (var i=0; i < trial.items.length; i++){
        item_order.push(i);
     }
@@ -295,9 +299,9 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       const qid = ("0" + `${item_order[i]+1}`);
 
       // Define response values.
-      var polar_values = trial.scale;
+      const polar_values = trial.scale;
 
-      var conditional_values = [];
+      const conditional_values = [];
       for (var j = 1; j <= trial.conditional_scale.length; j++){ conditional_values.push(j); }
 
       // Add a container and a response header for the polar question
@@ -352,11 +356,16 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
     // Display HTML
     display_element.innerHTML = html;
 
+
+        //------------------------------------------//
+        // Functions to create conditional response
+        //------------------------------------------//
+
     function require_checkboxes(hidden_checkboxes, addvalidate){
       const checked = []
       for (let h of hidden_checkboxes){ if (h.checked) checked.push(h) }
       if (checked.length > 0) {
-        for (let h of hidden_checkboxes) { h.required = false; if(addvalidate) {h.setCustomValidity('')}}
+        for (let h of hidden_checkboxes) { h.removeAttribute('required'); if(addvalidate) {h.setCustomValidity('')}}
       } else {
         for (let h of hidden_checkboxes) { h.required = true; if (addvalidate) {h.setCustomValidity('You must choose at least one response for this question')}}
       }
@@ -365,16 +374,15 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
     // Visibility etc of the conditional items
     const unhide = function(event){
         // If yes to polar question, unhide the hidden conditional question and vice versa
-        const targetId = event.currentTarget.id;
+        //const targetId = event.currentTarget.id;
         const val = event.target.value;
-        const hidden_target = document.getElementById(targetId.concat('_hidden'))
-        const hidden_checkboxes = hidden_target.querySelectorAll("[type='checkbox']")
+        const hidden_target = document.getElementById(event.currentTarget.id.concat('_hidden'))
         if (val === trial.scale[0]) {
           hidden_target.style.visibility = 'visible'
-          require_checkboxes(hidden_checkboxes, addvalidate=false)
         } else if (val === trial.scale[1]) {
           hidden_target.style.visibility = 'hidden'
-          for (let h of hidden_checkboxes) { h.required = false; h.setCustomValidity('')}
+          const hidden_checkboxes = hidden_target.querySelectorAll("[type='checkbox']")
+          for (let h of hidden_checkboxes) { h.removeAttribute('required'); h.setCustomValidity('')}
         }
     }
 
@@ -393,21 +401,23 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
    const hidden_containers = display_element.querySelectorAll(".survey-template-container-conditional")
    for (let h of hidden_containers) {h.addEventListener('click',toggle_required)}
 
-   // If submit
     display_element.querySelector('#submit-button').addEventListener('click', function(){
-      // 1. Adds a listener to submit button,
-      // 2. Checks all hidden containers are made visible and
-      // 3. complaines if they don't have at least one checkbox checked
+      // Adds listener to submit button, checks all hidden containers are made visible and complaines if they don't have at least one checkbox checked
       const all_hidden_containers = document.querySelectorAll(".survey-template-container-conditional")
       const containers_made_visible = []
       for (let h of all_hidden_containers){
         if (h.style.visibility === 'visible') {containers_made_visible.push(h.id)}
       }
       for (let h of containers_made_visible) {
+        const checkboxes =document.getElementById(h).querySelectorAll("[type='checkbox']")
         if (document.getElementById(h).querySelector('input:checked') == null) {
-          document.getElementById(h).querySelector('input').setCustomValidity('You must choose at least one response for this question');
+            for (let c of checkboxes) {
+              c.setCustomValidity('You must choose at least one response for this question');
+          }
         } else {
-          document.getElementById(h).querySelector('input').setCustomValidity('');
+          for (let c of checkboxes) {
+            c.setCustomValidity('');
+          }
         }
       }
     })
