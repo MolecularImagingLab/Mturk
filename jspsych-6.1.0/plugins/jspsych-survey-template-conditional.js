@@ -25,9 +25,8 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
         pretty_name: 'Scale',
         decription: 'The response options associated with the polar questions'
       },
-      conditional_items: {
+      conditional_item: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
-        array: true,
         pretty_name: 'Conditional items',
         decription: 'The conditional questions associated with the survey'
       },
@@ -333,7 +332,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
 
       // Add row for the conditional question
       html += '<div class="survey-template-row">';
-      html += `<div class='survey-template-prompt'>${trial.conditional_items[item_order[i]]}</div>`;
+      html += `<div class='survey-template-prompt'>${trial.conditional_item}</div>`;
       for (let v of conditional_values) {
         html += '<div class="survey-template-response">';
         html += '<div class="pseudo-input-conditional" ></div>';

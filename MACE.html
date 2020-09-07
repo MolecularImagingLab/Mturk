@@ -1,24 +1,40 @@
 <!DOCTYPE html>
+
+
+
 <html>
-    <head>
-        <title>My experiment</title>
-        <script src="jspsych-6.1.0/jspsych.js"></script>
-        <script src="jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
-        <link href="jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css"></link>
-    </head>
-    <body></body>
+  <head>
+    <meta charset="utf-8"/>
+    <script src="jspsych-6.1.0/jspsych.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-survey-template-conditional.js"></script>
+    <link rel="stylesheet" href="jspsych-6.1.0/css/jspsych.css"></link>
+    <!-- loading items & choises -->
+    <script src="MACE.js"></script>
+  </head>
+  <body></body>
 
     <script>
 
-    var hello_trial = {
-        type: 'html-keyboard-response',
-        stimulus: 'Hello world!'
-    }
+var MACEtrials = {
+  type: 'survey-template-conditional',
+  scale: ['Yes','No'],
+  conditional_item: 'Please check all ages that apply',
+  conditional_scale: [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" ],
+  timeline: [
+    {instructions: Instructions_parental, items: MACE_parental},
+    {instructions: Instructions_siblings, items: MACE_siblings},
+    {instructions: Instructions_pedo, items: MACE_pedo},
+    {instructions: Instructions_witness, items: MACE_witness},
+    {instructions: Instructions_bully, items: MACE_bully},
+    {instructions: Instructions_emotional, items: MACE_emotional},
+    {instructions: Instructions_physical, items: MACE_physical}
+  ]
+}
 
     jsPsych.init({
-           timeline: [hello_trial]
-       })
+      timeline: [ MACEtrials ],
+      on_finish: function() { jsPsych.data.displayData(); }
+    });
 
     </script>
-
-</html>
+  </html>
