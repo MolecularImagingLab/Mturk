@@ -310,14 +310,14 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       for (var j = 0; j < trial.scale.length; j++) {
         html += `<div class="survey-template-header">${trial.scale[j]}</div>`;
       }
-
+      qname = trial.items[item_order[i]].substring(0, 15);
       // Add row for the polar question.
       html += '<div class="survey-template-row">';
       html += `<div class='survey-template-prompt'>${trial.items[item_order[i]]}</div>`;
       for (let v of polar_values) {
         html += '<div class="survey-template-response">';
         html += '<div class="pseudo-input"></div>';
-        html += `<input type="radio" name="Q${qid}" value="${v}" id="Q${qid}.${v}" required>`;
+        html += `<input type="radio" name="Q${qid}.${qname}" value="${v}" id="Q${qid}.${v}" required>`;
         html += "</div>";
       }
       html += '</div>';
@@ -374,7 +374,6 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
     // Visibility etc of the conditional items
     const unhide = function(event){
         // If yes to polar question, unhide the hidden conditional question and vice versa
-        //const targetId = event.currentTarget.id;
         const val = event.target.value;
         const hidden_target = document.getElementById(event.currentTarget.id.concat('_hidden'))
         if (val === trial.scale[0]) {
