@@ -41,6 +41,11 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
         pretty_name: 'Instructions',
         decription: 'The instructions associated with the survey'
       },
+      battery_name: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        pretty_name: 'Item identifier',
+        decription: 'Identifier associated with the items for data analysis'
+      },
       randomize_question_order: {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Randomize Question Order',
@@ -265,8 +270,8 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
     }
 
     .hidden {
-      visibility:hidden;
       height: 0;
+      visibility:hidden;
     }
 
     input[type=checkbox] {
@@ -310,14 +315,13 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       for (var j = 0; j < trial.scale.length; j++) {
         html += `<div class="survey-template-header">${trial.scale[j]}</div>`;
       }
-      qname = trial.items[item_order[i]].substring(0, 15);
       // Add row for the polar question.
       html += '<div class="survey-template-row">';
       html += `<div class='survey-template-prompt'>${trial.items[item_order[i]]}</div>`;
       for (let v of polar_values) {
         html += '<div class="survey-template-response">';
         html += '<div class="pseudo-input"></div>';
-        html += `<input type="radio" name="Q${qid}.${qname}" value="${v}" id="Q${qid}.${v}" required>`;
+        html += `<input type="radio" name="${trial.battery_name}.${qid}" value="${v}" id="Q${qid}.${v}" required>`;
         html += "</div>";
       }
       html += '</div>';
@@ -337,7 +341,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       for (let v of conditional_values) {
         html += '<div class="survey-template-response">';
         html += '<div class="pseudo-input-conditional" ></div>';
-        html += `<input type="checkbox" name="C${qid}.Ages.${v}" value="${v}">`;
+        html += `<input type="checkbox" name="${trial.battery_name}.${qid}.Ages.${v}" value="${v}">`;
         html += "</div>";
       }
       html += '</div>';
