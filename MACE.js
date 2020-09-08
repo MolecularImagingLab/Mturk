@@ -2,13 +2,16 @@
 Instructions_parental = "Sometimes parents, stepparents or other adults living in the house do hurtful things. \
 If this happened during your childhood (first 18 years of your life) please provide your best estimate of your age at the time(s) of occurrence."
 
-MACE_parental = [
+MACE_parental_1 = [
   "Swore at you, called you names, said insulting things like your 'fat', 'ugly', 'stupid', etc. more than a few times a year",
   "Said hurtful things that made you feel bad, embarrassed or humiliated more than a few times a year.",
   "Acted in a way that made you afraid that you might be physically hurt.",
   "Threatened to leave or abandon you.",
   "Locked you in a closet, attic, basement or garage.",
-  "Intentionally pushed, grabbed, shoved, slapped, pinched, punched or kicked you.",
+  "Intentionally pushed, grabbed, shoved, slapped, pinched, punched or kicked you."
+]
+
+MACE_parental_2 = [
   "Hit you so hard that it left marks for more than a few minutes.",
   "Hit you so hard, or intentionally harmed you in some way, that you received or should have received medical attention.",
   "Spanked you on your buttocks, arms or legs.",
@@ -51,13 +54,15 @@ MACE_witness = [
 Instructions_bully = "Sometimes children your own age or older do hurtful things like bully or harass you. \
 If this happened during your childhood (first 18 years of your life) please provide your best estimates of your age at the time(s) of occurrence."
 
-MACE_bully = [
+MACE_bully_1 = [
   "Swore at you, called you names, said insulting things like your “fat”, “ugly”, “stupid”, etc. more than a few times a year.",
   "Said hurtful things that made you feel bad, embarrassed or humiliated more than a few times a year.",
   "Said things behind your back, posted derogatory messages about you, or spread rumors about you.",
   "Intentionally excluded you from activities or groups.",
-  "Acted in a way that made you afraid that you might be physically hurt.",
-  "Threatened you in order to take your money or possessions.",
+  "Acted in a way that made you afraid that you might be physically hurt."
+]
+
+MACE_bully_2 = [ "Threatened you in order to take your money or possessions.",
   "Forced or threatened you to do things that you did not want to do.",
   "Intentionally pushed, grabbed, shoved, slapped, pinched, punched, or kicked you.",
   "Hit you so hard that it left marks for more than a few minutes.",

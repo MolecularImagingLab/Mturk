@@ -265,11 +265,12 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
     }
 
     .hidden {
-      visibility:hidden
+      visibility:hidden;
+      height: 0;
     }
 
     input[type=checkbox] {
-    transform: scale(1.5);
+      transform: scale(1.5);
     }
 
     </style>`;
@@ -378,8 +379,10 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
         const hidden_target = document.getElementById(event.currentTarget.id.concat('_hidden'))
         if (val === trial.scale[0]) {
           hidden_target.style.visibility = 'visible'
+          hidden_target.style.height = 'auto'
         } else if (val === trial.scale[1]) {
           hidden_target.style.visibility = 'hidden'
+          hidden_target.style.height = '0px'
           const hidden_checkboxes = hidden_target.querySelectorAll("[type='checkbox']")
           for (let h of hidden_checkboxes) { h.removeAttribute('required'); h.setCustomValidity('')}
         }
