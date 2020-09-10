@@ -55,7 +55,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       survey_width: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Survey width',
-        default: 80,
+        default: 70,
         description: 'The percentage of the viewport occupied by the survey'
       },
       item_width: {
@@ -103,9 +103,10 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
 
     // Insert CSS
     html += `<style>
+
     .survey-template-wrap {
       height: 100vh;
-      width: 100vw;
+      width: 100%;
     }
     .survey-template-instructions {
       width: ${trial.survey_width}vw;
@@ -359,6 +360,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
 
     // Display HTML
     display_element.innerHTML = html;
+    window.scrollTo(0,0);
 
 
         //------------------------------------------//
@@ -436,6 +438,10 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
     window.onbeforeunload = function () {
       window.scrollTo(0, 0);
     }
+
+    // window.addEventListener("unload", function(event) { window.scrollTo(0,0); });
+
+    // window.onunload = function(){ window.scrollTo(0,0); }
 
     display_element.querySelector('#survey-template-submit').addEventListener('submit', function(event) {
 
