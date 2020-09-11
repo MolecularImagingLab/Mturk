@@ -64,11 +64,12 @@ var relationshipItems = [
   "When it comes to close relationships with your friends, how important have these relationships been to you over the past week?"
 ];
 
-var relationshipScale = ["not at all important to me",
+var relationshipobj = {
+  scale1: ["not at all important to me",
   "",
   "",
   "",
   "extremely important to me"
-];
+]};
 
 var relationshipReverse =  Array(relationshipItems.length).fill(false);;

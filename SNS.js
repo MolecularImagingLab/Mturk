@@ -2,12 +2,19 @@
 var SNSinstruction = 'TFor each statement, put a cross in the box which best corresponds to your current feelings (based on the previous week).';
 
 // Choice Options
-var SNSoptions = [
-  "Strongly agree",
-  "Somewhat agree",
-  "Somewhat disagree",
-  "Strongly disagree",
-]
+// var SNSoptions = [
+//   "Strongly agree",
+//   "Somewhat agree",
+//   "Somewhat disagree",
+//   "Strongly disagree",
+// ]
+
+
+var SNSoptions = {
+  scale1: [  "Strongly agree",
+    "Somewhat agree",
+    "Somewhat disagree",
+    "Strongly disagree"]}
 
 // Items
 var SNSitems = [

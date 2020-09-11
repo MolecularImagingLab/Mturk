@@ -41,9 +41,10 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
         pretty_name: 'Instructions',
         decription: 'The instructions associated with the survey'
       },
-      battery_name: {
+      name: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
-        pretty_name: 'Item identifier',
+        pretty_name: 'Name of the Questionnaire',
+        default: 'Questionnaire',
         decription: 'Identifier associated with the items for data analysis'
       },
       randomize_question_order: {
@@ -322,7 +323,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       for (let v of polar_values) {
         html += '<div class="survey-template-response">';
         html += '<div class="pseudo-input"></div>';
-        html += `<input type="radio" name="${trial.battery_name}.${qid}" value="${v}" id="Q${qid}.${v}" required>`;
+        html += `<input type="radio" name="${trial.name}.${qid}" value="${v}" id="Q${qid}.${v}" required>`;
         html += "</div>";
       }
       html += '</div>';
@@ -342,7 +343,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
       for (let v of conditional_values) {
         html += '<div class="survey-template-response">';
         html += '<div class="pseudo-input-conditional" ></div>';
-        html += `<input type="checkbox" name="${trial.battery_name}.${qid}.Ages.${v}" value="${v}">`;
+        html += `<input type="checkbox" name="${trial.name}.${qid}.Ages.${v}" value="${v}">`;
         html += "</div>";
       }
       html += '</div>';
@@ -434,14 +435,10 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
     // Response handling.
     //---------------------------------------//
 
-    // Scroll to top of screen.
-    window.onbeforeunload = function () {
-      window.scrollTo(0, 0);
-    }
-
-    // window.addEventListener("unload", function(event) { window.scrollTo(0,0); });
-
-    // window.onunload = function(){ window.scrollTo(0,0); }
+    // Scroll to top of screen. May not work the way you might expect.
+    // window.onbeforeunload = function () {
+    //   window.scrollTo(0, 0);
+    // }
 
     display_element.querySelector('#survey-template-submit').addEventListener('submit', function(event) {
 
@@ -459,6 +456,7 @@ jsPsych.plugins['survey-template-conditional'] = (function() {
         var trialdata = {
           "responses": question_data,
           "rt": response_time
+          "questionnaire": name
         };
 
         // Update screen

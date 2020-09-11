@@ -1,7 +1,7 @@
 /* jspsych-survey-template.js
  * a jspsych plugin extension for measuring items on a likert scale
  *
- * authors: Sam Zorowitz, Dan Bennett
+ * authors: Sam Zorowitz, Dan Bennett, modified by Lauri Tuominen
  *
  */
 
@@ -36,6 +36,12 @@ jsPsych.plugins['survey-template-obj'] = (function() {
         type: jsPsych.plugins.parameterType.HTML_STRING,
         pretty_name: 'Instructions',
         decription: 'The instructions associated with the survey'
+      },
+      name: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        default: 'Questionnaire',
+        pretty_name: 'Name of the Questionnaire',
+        decription: 'Identifier associated with the items for data analysis'
       },
       randomize_question_order: {
         type: jsPsych.plugins.parameterType.BOOL,
@@ -89,7 +95,7 @@ jsPsych.plugins['survey-template-obj'] = (function() {
     html += `<style>
     .survey-template-wrap {
       height: 100vh;
-      width: 100vw;
+      width: 100%;
     }
     .survey-template-instructions {
       width: ${trial.survey_width}vw;
@@ -266,7 +272,7 @@ jsPsych.plugins['survey-template-obj'] = (function() {
       for (let v of values) {
         html += '<div class="survey-template-response">';
         html += '<div class="pseudo-input"></div>';
-        html += `<input type="radio" name="Q${qid}" value="${v}" required>`;
+        html += `<input type="radio" name="${trial.name}.${qid}" value="${v}" required>`;
         html += "</div>";
       }
       html += '</div>';
@@ -284,15 +290,15 @@ jsPsych.plugins['survey-template-obj'] = (function() {
 
     // Display HTML
     display_element.innerHTML = html;
-
+    window.scrollTo(0, 0);
     //---------------------------------------//
     // Response handling.
     //---------------------------------------//
 
     // Scroll to top of screen.
-    window.onbeforeunload = function () {
-      window.scrollTo(0, 0);
-    }
+    // window.onbeforeunload = function () {
+    //   window.scrollTo(0, 0);
+    // }
 
     display_element.querySelector('#survey-template-submit').addEventListener('submit', function(event) {
 
@@ -310,6 +316,7 @@ jsPsych.plugins['survey-template-obj'] = (function() {
         var trialdata = {
           "responses": question_data,
           "rt": response_time
+          "questionnaire": name
         };
 
         // Update screen
